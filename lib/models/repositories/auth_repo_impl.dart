@@ -7,7 +7,7 @@ import 'package:web_community/domain/values/auth_values.dart';
 
 String basePath = AppConfig.basePath;
 
-class SignupRepoImpl implements SignupRepo {
+class AuthRepoImpl implements AuthRepo {
   @override
   Future<http.Response> signup(
     Username username,
@@ -32,9 +32,7 @@ class SignupRepoImpl implements SignupRepo {
       rethrow;
     }
   }
-}
 
-class SigningRepoImpl implements SigningRepo {
   @override
   Future<http.Response> signing(Email email, Password password) async {
     try {
@@ -54,19 +52,14 @@ class SigningRepoImpl implements SigningRepo {
       rethrow;
     }
   }
-}
 
-class VerifyRepoImpl implements VerifyRepo {
   @override
   Future<http.Response> verify(IdToken token) async {
     try {
       final url = Uri.parse("$basePath/authentication/verify");
       return await http.get(
         url,
-        headers: {
-          "Authorization": token.toString(),
-          "X-Firebase-AppCheck": ""
-        },
+        headers: {"Authorization": token.toString(), "X-Firebase-AppCheck": ""},
       );
     } catch (e) {
       rethrow;

@@ -7,9 +7,9 @@ class CacheIdTokenRepoImpl implements CacheIdTokenRepo {
   static final _key = StorageKeys.getIdTokenKey();
 
   @override
-  Future<void> saveToken(IdToken token) async {
+  Future<bool> saveToken(IdToken token) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_key, token.toString());
+    return await prefs.setString(_key, token.toString());
   }
 
   @override
@@ -24,8 +24,8 @@ class CacheIdTokenRepoImpl implements CacheIdTokenRepo {
   }
 
   @override
-  Future<void> deleteToken() async {
+  Future<bool> deleteToken() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_key);
+    return await prefs.remove(_key);
   }
 }

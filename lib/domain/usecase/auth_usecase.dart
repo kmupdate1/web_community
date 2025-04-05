@@ -4,7 +4,7 @@ import 'package:web_community/domain/values/auth_values.dart';
 import 'package:web_community/domain/values/token.dart';
 
 class SignupUsecase {
-  final SignupRepo _repo;
+  final AuthRepo _repo;
 
   Future<Response?> execute(
     String rawUsername,
@@ -22,11 +22,11 @@ class SignupUsecase {
     }
   }
 
-  SignupUsecase(SignupRepo repo) : _repo = repo;
+  SignupUsecase(AuthRepo repo) : _repo = repo;
 }
 
 class SigningUsecase {
-  final SigningRepo _repo;
+  final AuthRepo _repo;
 
   Future<Response?> execute(String rawEmail, String rawPassword) async {
     try {
@@ -36,11 +36,11 @@ class SigningUsecase {
     }
   }
 
-  SigningUsecase(SigningRepo repo) : _repo = repo;
+  SigningUsecase(AuthRepo repo) : _repo = repo;
 }
 
 class VerifyUsecase {
-  final VerifyRepo _repo;
+  final AuthRepo _repo;
 
   Future<Response?> execute(String rawToken) async {
     try {
@@ -50,5 +50,5 @@ class VerifyUsecase {
     }
   }
 
-  VerifyUsecase(VerifyRepo repo) : _repo = repo;
+  VerifyUsecase(AuthRepo repo) : _repo = repo;
 }

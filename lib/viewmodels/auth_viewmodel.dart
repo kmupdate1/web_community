@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../core/validators.dart';
 import 'package:web_community/domain/usecase/auth_usecase.dart';
@@ -28,7 +29,7 @@ class SignupViewModel extends AuthViewModel {
     if (response != null) {
       responseMsg = jsonDecode(response.body)["message"];
       notifyListeners();
-      if (response.statusCode == 201) {
+      if (response.statusCode == HttpStatus.created) {
         return true;
       } else {
         return false;
@@ -55,15 +56,10 @@ class SigningViewModel extends AuthViewModel {
     if (response != null) {
       responseMsg = jsonDecode(response.body)["message"];
       notifyListeners();
-      if (response.statusCode == 200) {
-        final isSaved = await _saveIdTokenUsecase.execute(
-          response.headers["Authorization"]!,
+      if (response.statusCode == HttpStatus.ok) {
+        return await _saveIdTokenUsecase.execute(
+          response.headers["authorization"]!,
         );
-        if (isSaved) {
-          return true;
-        } else {
-          return false;
-        }
       } else {
         return false;
       }
@@ -81,15 +77,17 @@ class SigningViewModel extends AuthViewModel {
 
 class VerifyViewModel extends ChangeNotifier {
   final VerifyUsecase _verifyUsecase;
+  final FetchIdTokenUsecase _fetchIdTokenUsecase;
 
   bool isLoading = false;
   String responseMsg = "";
 
-  Future<bool> verifyIdToken(String token) async {
+  Future<bool> verifyIdToken() async {
     isLoading = true;
     notifyListeners();
 
-    final response = await _verifyUsecase.execute(token);
+    final idToken = await _fetchIdTokenUsecase.execute();
+    final response = await _verifyUsecase.execute(idToken.toString());
     isLoading = false;
 
     if (response != null) {
@@ -105,6 +103,9 @@ class VerifyViewModel extends ChangeNotifier {
     }
   }
 
-  VerifyViewModel(VerifyUsecase verifyViewmodel)
-    : _verifyUsecase = verifyViewmodel;
+  VerifyViewModel({
+    required VerifyUsecase verifyUsecase,
+    required FetchIdTokenUsecase fetchIdTokenUsecase,
+  }) : _verifyUsecase = verifyUsecase,
+       _fetchIdTokenUsecase = fetchIdTokenUsecase;
 }

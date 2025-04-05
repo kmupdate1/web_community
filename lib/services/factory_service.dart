@@ -6,7 +6,7 @@ import 'package:web_community/viewmodels/auth_viewmodel.dart';
 
 class SignupViewModelFactory {
   static SignupViewModel getInstance() {
-    final repo = SignupRepoImpl();
+    final repo = AuthRepoImpl();
     final usecase = SignupUsecase(repo);
     final viewModel = SignupViewModel(usecase);
 
@@ -16,7 +16,7 @@ class SignupViewModelFactory {
 
 class SigningViewModelFactory {
   static SigningViewModel getInstance() {
-    final authRepo = SigningRepoImpl();
+    final authRepo = AuthRepoImpl();
     final idTokenRepo = CacheIdTokenRepoImpl();
     final signingUsecase = SigningUsecase(authRepo);
     final saveIdTokenUsecase = SaveIdTokenUsecase(idTokenRepo);
@@ -31,9 +31,14 @@ class SigningViewModelFactory {
 
 class VerifyViewModelFactory {
   static VerifyViewModel getInstance() {
-    final repo = VerifyRepoImpl();
-    final usecase = VerifyUsecase(repo);
-    final viewModel = VerifyViewModel(usecase);
+    final authRepo = AuthRepoImpl();
+    final cacheRepo = CacheIdTokenRepoImpl();
+    final verifyUsecase = VerifyUsecase(authRepo);
+    final fetchUsecase = FetchIdTokenUsecase(cacheRepo);
+    final viewModel = VerifyViewModel(
+      verifyUsecase: verifyUsecase,
+      fetchIdTokenUsecase: fetchUsecase,
+    );
 
     return viewModel;
   }

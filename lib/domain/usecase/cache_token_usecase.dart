@@ -6,8 +6,7 @@ class SaveIdTokenUsecase {
 
   Future<bool> execute(String rawToken) async {
     try {
-      final token = IdToken(rawToken);
-      await _repo.saveToken(token);
+      await _repo.saveToken(IdToken(rawToken));
       return true;
     } catch (e) {
       return false;
@@ -20,9 +19,19 @@ class SaveIdTokenUsecase {
 class FetchIdTokenUsecase {
   final CacheIdTokenRepo _repo;
 
-  Future<IdToken?> execute() {
-    return _repo.fetchToken();
+  Future<IdToken?> execute() async {
+    return await _repo.fetchToken();
   }
 
   FetchIdTokenUsecase(CacheIdTokenRepo repo) : _repo = repo;
+}
+
+class DeleteIdTokenUsecase {
+  final CacheIdTokenRepo _repo;
+
+  Future<bool> execute() async {
+    return await _repo.deleteToken();
+  }
+
+  DeleteIdTokenUsecase(CacheIdTokenRepo repo) : _repo = repo;
 }

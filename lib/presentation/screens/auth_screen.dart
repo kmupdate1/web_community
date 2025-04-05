@@ -6,8 +6,6 @@ import 'package:web_community/viewmodels/auth_viewmodel.dart';
 import 'package:web_community/core/config/app_config.dart';
 
 class SignupScreen extends StatelessWidget {
-  SignupScreen({super.key});
-
   final _forKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
@@ -15,7 +13,7 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final signupViewmodel = Provider.of<SignupViewModel>(context);
+    final signupViewModel = Provider.of<SignupViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(title: Text("SIGNUP")),
@@ -30,28 +28,28 @@ class SignupScreen extends StatelessWidget {
                   TextFormField(
                     controller: usernameController,
                     decoration: InputDecoration(hintText: "Username"),
-                    validator: signupViewmodel.validateUsername,
+                    validator: signupViewModel.validateUsername,
                     keyboardType: TextInputType.text,
                   ),
                   TextFormField(
                     controller: emailController,
                     decoration: InputDecoration(hintText: "Email"),
-                    validator: signupViewmodel.validateEmail,
+                    validator: signupViewModel.validateEmail,
                     keyboardType: TextInputType.emailAddress,
                   ),
                   TextFormField(
                     controller: passwordController,
                     decoration: InputDecoration(hintText: "Password"),
-                    validator: signupViewmodel.validatePassword,
+                    validator: signupViewModel.validatePassword,
                     keyboardType: TextInputType.visiblePassword,
                   ),
                   SizedBox(height: 20),
-                  signupViewmodel.isLoading
+                  signupViewModel.isLoading
                       ? CircularProgressIndicator()
                       : ElevatedButton(
                         onPressed: () async {
                           if (_forKey.currentState!.validate()) {
-                            bool isSuccess = await signupViewmodel.signup(
+                            bool isSuccess = await signupViewModel.signup(
                               usernameController.text,
                               emailController.text,
                               passwordController.text,
@@ -59,7 +57,7 @@ class SignupScreen extends StatelessWidget {
                             if (isSuccess) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(signupViewmodel.responseMsg),
+                                  content: Text(signupViewModel.responseMsg),
                                 ),
                               );
                             } else {
@@ -99,18 +97,19 @@ class SignupScreen extends StatelessWidget {
       ),
     );
   }
+
+  SignupScreen({super.key});
 }
 
 class SigningScreen extends StatelessWidget {
-  SigningScreen({super.key});
-
   final _forKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final singingViewmodel = Provider.of<SigningViewModel>(context);
+    final singingViewModel = Provider.of<SigningViewModel>(context);
+    final verifyViewModel = Provider.of<VerifyViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(title: Text("SIGNING")),
@@ -125,31 +124,36 @@ class SigningScreen extends StatelessWidget {
                   TextFormField(
                     controller: emailController,
                     decoration: InputDecoration(hintText: "Email"),
-                    validator: singingViewmodel.validateEmail,
+                    validator: singingViewModel.validateEmail,
                     keyboardType: TextInputType.emailAddress,
                   ),
                   TextFormField(
                     controller: passwordController,
                     decoration: InputDecoration(hintText: "Password"),
-                    validator: singingViewmodel.validatePassword,
+                    validator: singingViewModel.validatePassword,
                     keyboardType: TextInputType.visiblePassword,
                   ),
                   SizedBox(height: 20),
-                  singingViewmodel.isLoading
+                  singingViewModel.isLoading
                       ? CircularProgressIndicator()
                       : ElevatedButton(
                         onPressed: () async {
                           if (_forKey.currentState!.validate()) {
-                            bool isSuccess = await singingViewmodel.signing(
+                            bool isSuccess = await singingViewModel.signing(
                               emailController.text,
                               passwordController.text,
                             );
                             if (isSuccess) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(singingViewmodel.responseMsg),
+                                  content: Text(singingViewModel.responseMsg),
                                 ),
                               );
+                              bool isVerify =
+                                  await verifyViewModel.verifyIdToken();
+                              if (isVerify) {
+                                context.go("https://google.com/");
+                              }
                             }
                           }
                         },
@@ -183,6 +187,22 @@ class SigningScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  SigningScreen({super.key});
+}
+
+class SignoutScreen extends StatelessWidget {
+  final _forKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Sample Signout")),
+      body: Padding(padding: EdgeInsets.all(16.0), child: Column(children: [
+          ],
+        )),
     );
   }
 }

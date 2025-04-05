@@ -8,12 +8,15 @@ void main() {
   final GoRouter router = Routes.router;
   final signupViewModel = SignupViewModelFactory.getInstance();
   final signingViewModel = SigningViewModelFactory.getInstance();
+  final verifyViewModel = VerifyViewModelFactory.getInstance();
 
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => signupViewModel),
         ChangeNotifierProvider(create: (_) => signingViewModel),
+        ChangeNotifierProvider(create: (_) => verifyViewModel),
       ],
       child: App(router: router),
     ),
