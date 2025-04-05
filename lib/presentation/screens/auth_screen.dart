@@ -152,7 +152,7 @@ class SigningScreen extends StatelessWidget {
                               bool isVerify =
                                   await verifyViewModel.verifyIdToken();
                               if (isVerify) {
-                                context.go("https://google.com/");
+                                context.go("${AppConfig.basePath}/talkroom/home");
                               }
                             }
                           }
